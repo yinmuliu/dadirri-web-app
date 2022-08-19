@@ -10,7 +10,10 @@ function App() {
       <NavBar />
       <h1>Dadirri</h1>
       <WelcomeMsg />
-      <Map />
+      <div>
+        <Map />
+      </div>
+
       <Footer />
     </div>
   );
