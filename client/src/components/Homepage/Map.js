@@ -11,22 +11,82 @@ import {
   Link,
   useDisclosure,
   Button,
+  Input,
+  Box,
+  Text,
 } from "@chakra-ui/react";
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import {
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
+} from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from "@chakra-ui/react";
+import { ExternalLinkIcon, SearchIcon } from "@chakra-ui/icons";
+
+const SearchResult = ({ results, openDetails }) => {
+  return (
+    <Accordion defaultIndex={[0]} allowToggle my="5" mx="5">
+      <AccordionItem>
+        <h2>
+          <AccordionButton>
+            <Box flex="1" textAlign="left">
+              Click to show search results
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+        <AccordionPanel pb={4}>
+          {results.map((result) => (
+            <Button
+              key={result._id}
+              colorScheme="teal"
+              size="xs"
+              mx="2"
+              my="1"
+              onClick={() => openDetails(result._id)}
+            >
+              {result.language_name}
+            </Button>
+          ))}
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+  );
+};
 
 const Map = ({ languages }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = React.useRef();
   const [language, setLanguage] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearchTermChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
   const openLangDetails = (langID) => {
     const languageToShow = languages.find((lang) => lang._id === langID);
-    // format languageToShow.language_synonym from | to ,
     languageToShow.language_synonym = languageToShow.language_synonym
       .split("|")
       .join(", ");
     setLanguage(languageToShow);
     onOpen();
+    setSearchTerm("");
+  };
+
+  const handleSearch = async () => {
+    const url = `https://data.gov.au/data/api/3/action/datastore_search_sql?sql=SELECT%20*%20from%20%22e9a9ea06-d821-4b53-a05f-877409a1a19c%22%20WHERE%20language_name%20LIKE%20'%${searchTerm}%'`;
+    const res = await fetch(url);
+    const results = await res.json();
+    setSearchResults(results.result.records);
   };
 
   return (
@@ -54,16 +114,39 @@ const Map = ({ languages }) => {
           </Marker>
         ))}
       </MapContainer>
+
       {language && (
         <Drawer
           isOpen={isOpen}
           placement="right"
           onClose={onClose}
           finalFocusRef={btnRef}
+          size="sm"
         >
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
+
+            <FormControl mt="5">
+              <FormLabel mx="5" my="3">
+                Search for a language
+              </FormLabel>
+              <Input
+                type="text"
+                // value={value}
+                onChange={handleSearchTermChange}
+                mx="4"
+                maxW={300}
+                placeholder="Type in a language"
+                _placeholder={{ opacity: 1, color: "gray.500" }}
+              />
+              <SearchIcon mx="1px" onClick={handleSearch} />
+            </FormControl>
+
+            <SearchResult
+              results={searchResults}
+              openDetails={openLangDetails}
+            />
 
             <DrawerHeader>{language.language_name}</DrawerHeader>
 
