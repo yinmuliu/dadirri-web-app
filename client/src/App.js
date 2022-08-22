@@ -1,6 +1,7 @@
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes, Route, useNavigate } from "react-router-dom";
+import { ChakraProvider } from "@chakra-ui/react";
 import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import WelcomeMsg from "./components/Homepage/WelcomeMsg";
@@ -25,9 +26,8 @@ function App() {
   }, []);
 
   return (
-    <div className="App">
+    <ChakraProvider>
       <NavBar />
-      <h1>Dadirri</h1>
       <Routes>
         <Route
           path="/"
@@ -44,7 +44,7 @@ function App() {
         <Route path="/recordguide" element={<RecordGuide />} />
       </Routes>
       <Footer />
-    </div>
+    </ChakraProvider>
   );
 }
 
