@@ -267,7 +267,7 @@ const NAV_ITEMS = [
       },
       {
         label: "What experiences can I record?",
-        href: "/",
+        href: "/recordguide",
       },
     ],
   },

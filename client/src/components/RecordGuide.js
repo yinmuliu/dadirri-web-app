@@ -1,19 +1,22 @@
+import { Heading, Stack, Text, AspectRatio } from "@chakra-ui/react";
+
 const RecordGuide = () => {
   return (
     <>
-      <h1>What can I record?</h1>
-      <ul>
-        <li>consectetur adipiscing elit</li>
-        <li>consectetur adipiscing elit</li>
-        <li>consectetur adipiscing elit</li>
-        <li>consectetur adipiscing elit</li>
-      </ul>
-      <p>
-        Lorem ipsum dolor sit amet, efficitur dignissim turpis lobortis eu. Orci
-        varius natoque penatibus et magnis dis parturient montes, nascetur
-        ridiculus mus. Cras quis convallis arcu. Aliquam eget tellus maximus,
-        interdum ex dictum, dignissim lacus.
-      </p>
+      <Stack spacing={4} my="10" mx="10">
+        <Heading fontSize={"3xl"}>What experiences can I record?</Heading>
+        <Text color={"gray.600"} fontSize={"xl"}>
+          Rediscover the land by being aware of the languages around you, and
+          through sharing your own auditory experience. Lorem ipsum dolor sit
+          amet, consectetur adipiscing elit. Aenean mattis tristique nulla, ut
+          convallis quam imperdiet a. Sed condimentum felis nec convallis
+          imperdiet. Praesent sollicitudin arcu a ultrices pellentesque. Mauris
+          bibendum lacus justo, efficitur dignissim turpis lobortis eu. Orci
+          varius natoque penatibus et magnis dis parturient montes, nascetur
+          ridiculus mus. Cras quis convallis arcu. Aliquam eget tellus maximus,
+          interdum ex dictum, dignissim lacus.
+        </Text>
+      </Stack>
     </>
   );
 };

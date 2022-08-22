@@ -1,4 +1,3 @@
-import { ButtonGroup, Image, Flex, Spacer } from "@chakra-ui/react";
 import * as React from "react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
 import {
@@ -13,6 +12,8 @@ import {
   Input,
   IconButton,
   useColorModeValue,
+  ButtonGroup,
+  Image,
 } from "@chakra-ui/react";
 
 const Logo = (props) => {
