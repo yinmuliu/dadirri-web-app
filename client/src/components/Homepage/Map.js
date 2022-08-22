@@ -13,20 +13,13 @@ import {
   Button,
   Input,
   Box,
-  Text,
-} from "@chakra-ui/react";
-import {
   Accordion,
   AccordionItem,
   AccordionButton,
   AccordionPanel,
   AccordionIcon,
-} from "@chakra-ui/react";
-import {
   FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon, SearchIcon } from "@chakra-ui/icons";
 
@@ -125,7 +118,7 @@ const Map = ({ languages }) => {
         >
           <DrawerOverlay />
           <DrawerContent>
-            <DrawerCloseButton />
+            <DrawerCloseButton onClick={onClose} />
 
             <FormControl mt="5">
               <FormLabel mx="5" my="3">
@@ -142,14 +135,11 @@ const Map = ({ languages }) => {
               />
               <SearchIcon mx="1px" onClick={handleSearch} />
             </FormControl>
-
             <SearchResult
               results={searchResults}
               openDetails={openLangDetails}
             />
-
             <DrawerHeader>{language.language_name}</DrawerHeader>
-
             <DrawerBody>
               <h4>
                 Synonym: <br /> {language.language_synonym}
@@ -165,9 +155,11 @@ const Map = ({ languages }) => {
 
             <DrawerFooter>
               <Button variant="outline" mr={3} onClick={onClose}>
-                Cancel
+                Back to map
               </Button>
-              <Button colorScheme="blue">Save</Button>
+              <Button colorScheme="blue" onClick={onClose}>
+                Back to map
+              </Button>
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
