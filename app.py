@@ -1,7 +1,16 @@
-import requests
+from flask import (
+    Flask,
+    redirect,
+    jsonify,
+    request,
+    g
+)
 
-response = requests.get(
-    'https://data.gov.au/data/api/3/action/datastore_search?resource_id=e9a9ea06-d821-4b53-a05f-877409a1a19c')
+from werkzeug.security import generate_password_hash
+from .db import get_db, close_db
+
+app = Flask(__name__)
+app.secret_key = 'mochi the kitty'
 
 
 ##############
@@ -23,3 +32,7 @@ response = requests.get(
 ##############
 # CREATE SOUND FILE
 ##############
+
+@app.router('/register', methods=['POST'])
+def register():
+    username = request.json['username']
