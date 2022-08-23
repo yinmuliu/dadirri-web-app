@@ -9,10 +9,13 @@ from flask import (
 
 from werkzeug.security import generate_password_hash, check_password_hash
 import psycopg2
+import os
+import cloudinary.uploader
+
 from .db import get_db, close_db
 
 app = Flask(__name__)
-app.secret_key = 'mochi the kitty'
+app.secret_key = os.environ.get('SECRET_KEY')
 
 
 @app.before_request
@@ -102,10 +105,11 @@ def logout():
     return jsonify(success=True)
 
 
-# @app.route('/am-i-logged-in')
-# def test():
-#     print(session['user'])
-#     return jsonify(session['user'])
+@app.route('/am-i-logged-in')
+def test():
+    print(session['user'])
+    return jsonify(session['user'])
+
 
 @app.route('/is-authenticated')
 def is_authenticated():
