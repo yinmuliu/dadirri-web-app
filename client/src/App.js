@@ -15,6 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 function App() {
   const [languages, setLanguages] = useState(null);
   const [user, setUser] = useState(null);
+  const navigate = useNavigate();
 
   const getLanguages = async () => {
     const url =
@@ -34,19 +35,8 @@ function App() {
     getLanguages();
   }, []);
 
-  const handleSignup = async (fields) => {
-    // return async (fields) => {
-    //   const res = await fetch(`/${whichForm}`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(fields),
-    //   });
-    //   const data = await res.json();
-    //   setUser(data.user);
-    // };
-    const res = await fetch(`/signup`, {
+  const handleAuth = async (fields, whichForm) => {
+    const res = await fetch(`/${whichForm}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -55,6 +45,7 @@ function App() {
     });
     const data = await res.json();
     setUser(data.user);
+    navigate("/");
   };
 
   const handleLogout = async () => {
@@ -62,29 +53,26 @@ function App() {
       method: "POST",
     });
     const data = await res.json();
-    if (data.success) setUser(null);
+    if (data.success) setUser(undefined);
   };
 
   return (
     <ChakraProvider>
-      <NavBar />
+      <NavBar handleLogout={handleLogout} />
       <Routes>
         <Route
           path="/"
           element={
             <ProtectedRoute user={user}>
-              <WelcomeMsg />
+              <WelcomeMsg user={user} />
               {languages && <Map languages={languages} />}
             </ProtectedRoute>
           }
         />
 
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<Login handleLogin={handleAuth} />} />
 
-        <Route
-          path="/signup"
-          element={<Signup handleSignup={handleSignup} />}
-        />
+        <Route path="/signup" element={<Signup handleSignup={handleAuth} />} />
         <Route path="/about" element={<About />} />
         <Route path="/recordguide" element={<RecordGuide />} />
       </Routes>

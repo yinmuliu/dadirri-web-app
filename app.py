@@ -51,8 +51,10 @@ def disconnect_from_db(response):
 
 @app.route('/signup', methods=['POST'])
 def signup():
+    print('signup')
     username = request.json['username']
     password = request.json['password']
+    print(request.json)
     password_hash = generate_password_hash(password)
     query = """
         INSERT INTO users

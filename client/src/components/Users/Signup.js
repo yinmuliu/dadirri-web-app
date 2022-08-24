@@ -11,8 +11,24 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
 const Signup = ({ handleSignup }) => {
+  const [fields, setFields] = useState({ username: "", password: "" });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFields({
+      ...fields,
+      [name]: value,
+    });
+  };
+
+  const handleFormSubmit = async (e) => {
+    e.preventDefault();
+    handleSignup(fields, "signup");
+  };
+
   return (
     <Flex
       minH={"100vh"}
@@ -38,14 +54,26 @@ const Signup = ({ handleSignup }) => {
           p={8}
         >
           <Stack spacing={4}>
-            <form>
+            <form onSubmit={handleFormSubmit}>
               <FormControl id="username">
                 <FormLabel>Username</FormLabel>
-                <Input type="username" name="username" id="username" />
+                <Input
+                  type="username"
+                  name="username"
+                  id="username"
+                  value={fields.username}
+                  onChange={handleChange}
+                />
               </FormControl>
               <FormControl id="password">
                 <FormLabel>Password</FormLabel>
-                <Input type="password" name="password" id="password" />
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={fields.password}
+                  onChange={handleChange}
+                />
               </FormControl>
               <Stack spacing={10}>
                 <Stack
@@ -66,6 +94,7 @@ const Signup = ({ handleSignup }) => {
                   _hover={{
                     bg: "blue.500",
                   }}
+                  type="submit"
                 >
                   Join
                 </Button>
