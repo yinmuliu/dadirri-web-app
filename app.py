@@ -32,9 +32,37 @@ def disconnect_from_db(response):
 # GET ALL SOUND FILE UNDER LANGUAGE
 ##############
 
+
+@app.route('/language/<lang_code>')
+def show_audio_under_lang(lang_code):
+    cur = g.db['cursor']
+    query = """
+        SELECT * 
+        FROM files
+        JOIN users ON users.id = files.user_id
+        WHERE files.language_code = %s
+    """
+    cur.execute(query, (lang_code,))
+    files = g.db['cursor'].fetchall()
+    return jsonify(files)
+
+
 ##############
 # GET ALL SOUND FILE UNDER USER
 ##############
+@app.route('/user/<user_id>')
+def show_audio_under_user(user_id):
+    cur = g.db['cursor']
+    query = """
+        SELECT *
+        FROM files
+        JOIN users ON users.id = files.user_id
+        WHERE users.id = %s
+        ORDER BY date DESC
+    """
+    cur.execute(query, (user_id,))
+    files = cur.fetchall()
+    return jsonify(files=files)
 
 ##############
 # DELETE SOUND FILE
