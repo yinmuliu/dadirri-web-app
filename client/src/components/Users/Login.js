@@ -11,12 +11,22 @@ import {
   Text,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { useState } from "react";
 
-const Login = () => {
-  const handleChange = () => {
-    //   value={fields.username}
-    //   onChange={handleChange}
+const Login = ({ handleLogin }) => {
+  const [fields, setFields] = useState({ username: "", password: "" });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFields({
+      ...fields,
+      [name]: value,
+    });
   };
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleLogin(fields, "login");
+  };
+
   return (
     <Flex
       minH={"100vh"}
@@ -42,37 +52,52 @@ const Login = () => {
           p={8}
         >
           <Stack spacing={4}>
-            <FormControl id="username">
-              <FormLabel>Username</FormLabel>
-              <Input type="username" name="username" id="username" />
-            </FormControl>
-            <FormControl id="password">
-              <FormLabel>Password</FormLabel>
-              <Input type="password" name="password" id="password" />
-            </FormControl>
-            <Stack spacing={10}>
-              <Stack
-                direction={{ base: "column", sm: "row" }}
-                align={"start"}
-                justify={"space-between"}
-              >
-                <Text fontSize={"lg"} color={"gray.600"}>
-                  Not with us yet?{" "}
-                  <Link href="/signup" color={"blue.400"}>
-                    Register here
-                  </Link>
-                </Text>
+            <form onSubmit={handleFormSubmit}>
+              <FormControl id="username">
+                <FormLabel>Username</FormLabel>
+                <Input
+                  type="username"
+                  name="username"
+                  id="username"
+                  value={fields.username}
+                  onChange={handleChange}
+                />
+              </FormControl>
+              <FormControl id="password">
+                <FormLabel>Password</FormLabel>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  value={fields.password}
+                  onChange={handleChange}
+                />
+              </FormControl>
+              <Stack spacing={10}>
+                <Stack
+                  direction={{ base: "column", sm: "row" }}
+                  align={"start"}
+                  justify={"space-between"}
+                >
+                  <Text fontSize={"lg"} color={"gray.600"}>
+                    Not with us yet?{" "}
+                    <Link href="/signup" color={"blue.400"}>
+                      Register here
+                    </Link>
+                  </Text>
+                </Stack>
+                <Button
+                  bg={"blue.400"}
+                  color={"white"}
+                  _hover={{
+                    bg: "blue.500",
+                  }}
+                  type="submit"
+                >
+                  Login
+                </Button>
               </Stack>
-              <Button
-                bg={"blue.400"}
-                color={"white"}
-                _hover={{
-                  bg: "blue.500",
-                }}
-              >
-                Login
-              </Button>
-            </Stack>
+            </form>
           </Stack>
         </Box>
       </Stack>

@@ -22,7 +22,7 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 
-const NavBar = () => {
+const NavBar = ({ handleLogout }) => {
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -77,7 +77,7 @@ const NavBar = () => {
             fontSize={"sm"}
             fontWeight={400}
             variant={"link"}
-            href={"#"}
+            onClick={handleLogout}
           >
             Log Out
           </Button>
