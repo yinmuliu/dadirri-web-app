@@ -22,7 +22,11 @@ import {
   ChevronRightIcon,
 } from "@chakra-ui/icons";
 
-const NavBar = ({ handleLogout }) => {
+var userID;
+const NavBar = ({ handleLogout, user }) => {
+  // console.log(user.id);
+  // userID = user.id;
+
   const { isOpen, onToggle } = useDisclosure();
 
   return (
@@ -58,11 +62,11 @@ const NavBar = ({ handleLogout }) => {
             fontFamily={"heading"}
             color={useColorModeValue("gray.800", "white")}
           >
-            Dadirri
+            <Link href="/">Dadirri</Link>
           </Text>
 
           <Flex display={{ base: "none", md: "flex" }} ml={10}>
-            <DesktopNav />
+            <DesktopNav user={user} />
           </Flex>
         </Flex>
 
@@ -104,7 +108,8 @@ const NavBar = ({ handleLogout }) => {
   );
 };
 
-const DesktopNav = () => {
+const DesktopNav = ({ user }) => {
+  console.log(user);
   const linkColor = useColorModeValue("gray.600", "gray.200");
   const linkHoverColor = useColorModeValue("gray.800", "white");
   const popoverContentBgColor = useColorModeValue("white", "gray.800");
@@ -117,7 +122,11 @@ const DesktopNav = () => {
             <PopoverTrigger>
               <Link
                 p={2}
-                href={navItem.href ?? "#"}
+                href={
+                  user && navItem.label === "View my uploads"
+                    ? `/user/${user.id}`
+                    : navItem.href
+                }
                 fontSize={"sm"}
                 fontWeight={500}
                 color={linkColor}
@@ -190,7 +199,7 @@ const DesktopSubNav = ({ label, href, subLabel }) => {
   );
 };
 
-const MobileNav = () => {
+const MobileNav = ({ user }) => {
   return (
     <Stack
       bg={useColorModeValue("white", "gray.800")}

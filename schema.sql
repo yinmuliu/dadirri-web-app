@@ -10,7 +10,7 @@ CREATE TABLE users (
 CREATE TABLE files (
     id SERIAL PRIMARY KEY,
     url TEXT,
-    info TEXT NOT NULL,
+    info TEXT,
     date TIMESTAMP DEFAULT current_timestamp,
     language_code VARCHAR(50) NOT NULL,
     user_id SERIAL REFERENCES users(id) ON DELETE CASCADE

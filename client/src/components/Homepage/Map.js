@@ -8,6 +8,7 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerCloseButton,
+  Divider,
   Link,
   useDisclosure,
   Button,
@@ -22,6 +23,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { ExternalLinkIcon, SearchIcon } from "@chakra-ui/icons";
+import DisplayAudio from "./DisplayAudio";
 
 const SearchResult = ({ results, openDetails }) => {
   return (
@@ -70,6 +72,7 @@ const Map = ({ languages }) => {
     languageToShow.language_synonym = languageToShow.language_synonym
       .split("|")
       .join(", ");
+
     setLanguage(languageToShow);
     onOpen();
     setSearchTerm("");
@@ -126,7 +129,6 @@ const Map = ({ languages }) => {
               </FormLabel>
               <Input
                 type="text"
-                // value={value}
                 onChange={handleSearchTermChange}
                 mx="4"
                 maxW={300}
@@ -151,6 +153,8 @@ const Map = ({ languages }) => {
                   {language.language_code} <ExternalLinkIcon mx="1px" />
                 </Link>
               </h4>
+              <Divider orientation="horizontal" />
+              <DisplayAudio language={language} />
             </DrawerBody>
 
             <DrawerFooter>

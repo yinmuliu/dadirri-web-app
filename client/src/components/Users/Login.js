@@ -12,9 +12,11 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import FlashMessage from "react-flash-message";
 
 const Login = ({ handleLogin }) => {
   const [fields, setFields] = useState({ username: "", password: "" });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFields({

@@ -32,9 +32,50 @@ def disconnect_from_db(response):
 # GET ALL SOUND FILE UNDER LANGUAGE
 ##############
 
+
+@app.route('/language/<lang_code>')
+def show_audio_under_lang(lang_code):
+    cur = g.db['cursor']
+    query = """
+        SELECT * 
+        FROM files
+        JOIN users ON users.id = files.user_id
+        WHERE files.language_code = %s
+    """
+    cur.execute(query, (lang_code,))
+    files = g.db['cursor'].fetchall()
+    return jsonify(files)
+
+
 ##############
 # GET ALL SOUND FILE UNDER USER
 ##############
+@app.route('/user')
+def show_all_users():
+    cur = g.db['cursor']
+    query = """
+        SELECT *
+        FROM users 
+        ORDER BY id DESC
+    """
+    cur.execute(query)
+    users = cur.fetchall()
+    return jsonify(users=users)
+
+
+@app.route('/user/<user_id>')
+def show_audio_under_user(user_id):
+    cur = g.db['cursor']
+    query = """
+        SELECT *
+        FROM files
+        JOIN users ON users.id = files.user_id
+        WHERE users.id = %s
+        ORDER BY date DESC
+    """
+    cur.execute(query, (user_id,))
+    files = cur.fetchall()
+    return jsonify(files=files)
 
 ##############
 # DELETE SOUND FILE
@@ -49,9 +90,29 @@ def disconnect_from_db(response):
 ##############
 
 
+@app.route('/new-recording/<lang_code>', methods=['POST'])
+def create(lang_code):
+    print(request.files)
+    uploaded_file = cloudinary.uploader.upload(
+        request.files['audio_file'], resource_type="video")
+    print(uploaded_file)
+    user = session['user']
+    query = """
+        INSERT INTO files
+        (url, info, language_code, user_id)
+        VALUES (%s, %s, %s, %s)
+        RETURNING *
+    """
+    g.db['cursor'].execute(
+        query, (uploaded_file['url'], 'This is a placeholder description.', lang_code, user['id']))
+    g.db['connection'].commit()
+    file = g.db['cursor'].fetchone()
+    print(file)
+    return jsonify(file)
+
+
 @app.route('/signup', methods=['POST'])
 def signup():
-    print('signup')
     username = request.json['username']
     password = request.json['password']
     print(request.json)

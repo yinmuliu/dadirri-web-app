@@ -11,6 +11,7 @@ import RecordGuide from "./components/RecordGuide";
 import Login from "./components/Users/Login";
 import Signup from "./components/Users/Signup";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Userpage from "./components/Users/Userpage";
 
 function App() {
   const [languages, setLanguages] = useState(null);
@@ -58,7 +59,7 @@ function App() {
 
   return (
     <ChakraProvider>
-      <NavBar handleLogout={handleLogout} />
+      <NavBar handleLogout={handleLogout} user={user} />
       <Routes>
         <Route
           path="/"
@@ -71,10 +72,18 @@ function App() {
         />
 
         <Route path="/login" element={<Login handleLogin={handleAuth} />} />
-
         <Route path="/signup" element={<Signup handleSignup={handleAuth} />} />
         <Route path="/about" element={<About />} />
         <Route path="/recordguide" element={<RecordGuide />} />
+
+        <Route
+          path="/user/:userID"
+          element={
+            <ProtectedRoute user={user}>
+              <Userpage user={user} />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Footer />
     </ChakraProvider>
