@@ -104,7 +104,7 @@ def create(lang_code):
         RETURNING *
     """
     g.db['cursor'].execute(
-        query, (uploaded_file['url'], '', lang_code, user['id']))
+        query, (uploaded_file['url'], 'This is a placeholder description.', lang_code, user['id']))
     g.db['connection'].commit()
     file = g.db['cursor'].fetchone()
     print(file)
