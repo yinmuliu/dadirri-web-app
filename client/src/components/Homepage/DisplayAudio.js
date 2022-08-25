@@ -38,7 +38,7 @@ const DisplayAudio = ({ language }) => {
           <Button onClick={onOpen} colorScheme="blue" variant="ghost">
             Record
           </Button>
-          <RecordAudio isOpen={isOpen} onClose={onClose} />
+          <RecordAudio isOpen={isOpen} onClose={onClose} language={language} />
         </>
       ) : (
         <ul>

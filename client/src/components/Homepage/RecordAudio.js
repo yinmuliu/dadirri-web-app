@@ -23,8 +23,7 @@ const initialAudioDetails = {
   },
 };
 
-const RecordAudio = ({ isOpen, onClose }) => {
-  const [audioURL, setAudioURL] = useState();
+const RecordAudio = ({ isOpen, onClose, language }) => {
   const [audioDetails, setAudioDetails] = useState(initialAudioDetails);
 
   const handleAudioStop = (data) => {
@@ -32,8 +31,16 @@ const RecordAudio = ({ isOpen, onClose }) => {
     setAudioDetails(data);
   };
 
-  const handleAudioUpload = (file) => {
+  const handleAudioUpload = async (file) => {
+    console.log(language);
     console.log(file);
+    const formData = new FormData();
+    formData.append("audio_file", file);
+    console.log(...formData);
+    const res = await fetch(`/new-recording/${language.language_code}`, {
+      method: "POST",
+      body: formData,
+    });
   };
 
   const handleReset = () => {
@@ -58,7 +65,6 @@ const RecordAudio = ({ isOpen, onClose }) => {
             handleReset={handleReset}
           />
         </ModalBody>
-
         <ModalFooter>
           <Button colorScheme="blue" mr={3} onClick={onClose}>
             Close

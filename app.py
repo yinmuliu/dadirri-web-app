@@ -90,9 +90,29 @@ def show_audio_under_user(user_id):
 ##############
 
 
+@app.route('/new-recording/<lang_code>', methods=['POST'])
+def create(lang_code):
+    print(request.files)
+    uploaded_file = cloudinary.uploader.upload(
+        request.files['audio_file'], resource_type="video")
+    print(uploaded_file)
+    user = session['user']
+    query = """
+        INSERT INTO files
+        (url, info, language_code, user_id)
+        VALUES (%s, %s, %s, %s)
+        RETURNING *
+    """
+    g.db['cursor'].execute(
+        query, (uploaded_file['url'], '', lang_code, user['id']))
+    g.db['connection'].commit()
+    file = g.db['cursor'].fetchone()
+    print(file)
+    return jsonify(file)
+
+
 @app.route('/signup', methods=['POST'])
 def signup():
-    print('signup')
     username = request.json['username']
     password = request.json['password']
     print(request.json)
