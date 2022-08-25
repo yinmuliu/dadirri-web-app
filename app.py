@@ -50,6 +50,19 @@ def show_audio_under_lang(lang_code):
 ##############
 # GET ALL SOUND FILE UNDER USER
 ##############
+@app.route('/user')
+def show_all_users():
+    cur = g.db['cursor']
+    query = """
+        SELECT *
+        FROM users 
+        ORDER BY id DESC
+    """
+    cur.execute(query)
+    users = cur.fetchall()
+    return jsonify(users=users)
+
+
 @app.route('/user/<user_id>')
 def show_audio_under_user(user_id):
     cur = g.db['cursor']
