@@ -8,10 +8,38 @@ import {
   ModalCloseButton,
   Button,
 } from "@chakra-ui/react";
+import { useState } from "react";
 import { Recorder } from "react-voice-recorder";
 import "react-voice-recorder/dist/index.css";
 
+const initialAudioDetails = {
+  url: null,
+  blob: null,
+  chunks: null,
+  duration: {
+    h: 0,
+    m: 0,
+    s: 0,
+  },
+};
+
 const RecordAudio = ({ isOpen, onClose }) => {
+  const [audioURL, setAudioURL] = useState();
+  const [audioDetails, setAudioDetails] = useState(initialAudioDetails);
+
+  const handleAudioStop = (data) => {
+    console.log(data);
+    setAudioDetails(data);
+  };
+
+  const handleAudioUpload = (file) => {
+    console.log(file);
+  };
+
+  const handleReset = () => {
+    setAudioDetails(initialAudioDetails);
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} blockScrollOnMount={false}>
       <ModalOverlay />
@@ -20,15 +48,14 @@ const RecordAudio = ({ isOpen, onClose }) => {
         <ModalCloseButton />
         <ModalBody>
           <Recorder
+            className="recorder"
             record={true}
             title={"New recording"}
-            audioURL={this.state.audioDetails.url}
+            audioURL={audioDetails.url}
             showUIAudio
-            handleAudioStop={(data) => this.handleAudioStop(data)}
-            handleAudioUpload={(data) => this.handleAudioUpload(data)}
-            handleCountDown={(data) => this.handleCountDown(data)}
-            handleReset={() => this.handleReset()}
-            mimeTypeToUseWhenRecording={`audio/webm`}
+            handleAudioStop={(data) => handleAudioStop(data)}
+            handleAudioUpload={(data) => handleAudioUpload(data)}
+            handleReset={handleReset}
           />
         </ModalBody>
 
