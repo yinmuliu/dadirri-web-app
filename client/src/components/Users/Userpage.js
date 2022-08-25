@@ -11,7 +11,6 @@ const Userpage = ({ user }) => {
         const url = `/user/${user.id}`;
         const res = await fetch(url);
         const data = await res.json();
-        console.log(data);
         setAudioClips(data.files);
       } catch (err) {
         console.log("Error in getting user's audio data");

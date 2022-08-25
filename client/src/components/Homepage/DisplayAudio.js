@@ -1,7 +1,17 @@
 import { useEffect, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
-import { useDisclosure, Button } from "@chakra-ui/react";
+import {
+  useDisclosure,
+  Button,
+  Box,
+  List,
+  ListItem,
+  ListIcon,
+  Heading,
+  Text,
+} from "@chakra-ui/react";
 import RecordAudio from "./RecordAudio";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 
 const DisplayAudio = ({ language }) => {
   const [audioClips, setAudioClips] = useState([]);
@@ -23,30 +33,30 @@ const DisplayAudio = ({ language }) => {
 
   const clips = audioClips.map((clip) => {
     return (
-      <div>
+      <ListItem>
+        <ListIcon as={ChevronRightIcon} color="green.500" />
         <ReactAudioPlayer src={clip.url} controls />
-      </div>
+      </ListItem>
     );
   });
 
   return (
-    <>
-      <h1>Sound clips:</h1>
+    <Box my="5">
+      <Heading as="h4" size="md">
+        Sound clips
+      </Heading>
       {audioClips.length === 0 ? (
-        <>
-          <p>No one has recorded anything yet. Record the first sound clip!</p>
-          <Button onClick={onOpen} colorScheme="blue" variant="ghost">
-            Record
-          </Button>
-          <RecordAudio isOpen={isOpen} onClose={onClose} language={language} />
-        </>
+        <Text fontSize="md" my="2">
+          No one has recorded anything yet. Record the first sound clip!
+        </Text>
       ) : (
-        <ul>
-          {clips}
-          <a href="#">Record one for this langauge</a>
-        </ul>
+        <List spacing={3}>{clips}</List>
       )}
-    </>
+      <Button my="2" onClick={onOpen} colorScheme="blue" variant="ghost">
+        Record New
+      </Button>
+      <RecordAudio isOpen={isOpen} onClose={onClose} language={language} />
+    </Box>
   );
 };
 
