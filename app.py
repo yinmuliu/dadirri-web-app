@@ -105,14 +105,34 @@ def delete_user_file(file_id):
 # EDIT SOUND FILE INFO
 ##############
 
+
+@app.route('/editfile/<file_id>', methods=['PUT'])
+def edit_info(file_id):
+
+    info = request.form['info']
+    user = session['user']
+    query = """
+        UPDATE files
+        SET info = %s 
+        WHERE files.id = %s
+        RETURNING *
+    """
+    g.db['cursor'].execute(
+        query, (info, file_id))
+    g.db['connection'].commit()
+    file = g.db['cursor'].fetchone()
+    print(file)
+    return jsonify(file)
+
 ##############
 # CREATE SOUND FILE
 ##############
 
 
-@app.route('/new-recording/<lang_code>', methods=['POST'])
+@app.route('/new-recording/<lang_code>', methods=['POST', 'PATCH'])
 def create(lang_code):
     print(request.files)
+    info = request.form['info']
     uploaded_file = cloudinary.uploader.upload(
         request.files['audio_file'], resource_type="video")
     print(uploaded_file)
@@ -125,7 +145,7 @@ def create(lang_code):
         RETURNING *
     """
     g.db['cursor'].execute(
-        query, (uploaded_file['url'], 'This is a placeholder description.', lang_code, lang_name, user['id']))
+        query, (uploaded_file['url'], info, lang_code, lang_name, user['id']))
     g.db['connection'].commit()
     file = g.db['cursor'].fetchone()
     print(file)
