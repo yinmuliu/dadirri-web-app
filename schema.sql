@@ -13,5 +13,6 @@ CREATE TABLE files (
     info TEXT,
     date TIMESTAMP DEFAULT current_timestamp,
     language_code VARCHAR(50) NOT NULL,
+    language_name VARCHAR(100),
     user_id SERIAL REFERENCES users(id) ON DELETE CASCADE
 );

@@ -2,11 +2,11 @@ import { Heading, Stack, Text, Button } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import ReactAudioPlayer from "react-audio-player";
 
-const AudioList = ({ audioClips }) => {
+const AudioList = ({ audioClips, handleDelete }) => {
   const cards = audioClips.map((clip) => (
     <Stack p="4" boxShadow="lg" m="4" borderRadius="sm">
       <Stack direction="row" alignItems="center">
-        <Text fontWeight="semibold">Language code: {clip.language_code}</Text>
+        <Text fontWeight="semibold">Language: {clip.language_name}</Text>
       </Stack>
 
       <Stack
@@ -21,7 +21,12 @@ const AudioList = ({ audioClips }) => {
           <Button variant="outline" colorScheme="green">
             Edit Description
           </Button>
-          <Button colorScheme="green">Delete</Button>
+          <Button
+            colorScheme="green"
+            onClick={() => handleDelete(clip.file_id)}
+          >
+            Delete
+          </Button>
         </Stack>
       </Stack>
     </Stack>
@@ -47,6 +52,17 @@ const Userpage = ({ user }) => {
     getAudioClips();
   }, []);
 
+  const handleDelete = async (fileID) => {
+    await fetch(`/file/${fileID}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const updatedClips = audioClips.filter((clip) => clip.file_id !== fileID);
+    setAudioClips(updatedClips);
+  };
+
   return (
     <>
       <Stack spacing={4} my="10" mx="10">
@@ -54,7 +70,7 @@ const Userpage = ({ user }) => {
         <Text color={"gray.600"} fontSize={"xl"}>
           View your audio experiences, edit or delete.
         </Text>
-        <AudioList audioClips={audioClips} />
+        <AudioList audioClips={audioClips} handleDelete={handleDelete} />
       </Stack>
     </>
   );

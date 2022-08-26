@@ -34,8 +34,10 @@ const RecordAudio = ({ isOpen, onClose, language }) => {
   const handleAudioUpload = async (file) => {
     console.log(language);
     console.log(file);
+
     const formData = new FormData();
     formData.append("audio_file", file);
+    formData.append("language_name", language.language_name);
     console.log(...formData);
     const res = await fetch(`/new-recording/${language.language_code}`, {
       method: "POST",
