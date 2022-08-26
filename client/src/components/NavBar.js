@@ -284,13 +284,12 @@ const NAV_ITEMS = [
     label: "Learn a word today",
     children: [
       {
-        label: "Job Board",
-        subLabel: "Find your dream design job",
+        label: "Language A",
         href: "#",
       },
       {
-        label: "Freelance Projects",
-        subLabel: "An exclusive list for contract work",
+        label: "Language B",
+        subLabel: "An example sublabel",
         href: "#",
       },
     ],

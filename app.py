@@ -1,3 +1,5 @@
+from crypt import methods
+from time import clock_getres
 from flask import (
     Flask,
     redirect,
@@ -67,7 +69,7 @@ def show_all_users():
 def show_audio_under_user(user_id):
     cur = g.db['cursor']
     query = """
-        SELECT *
+        SELECT files.id AS file_id, date, info, language_code, language_name, url 
         FROM files
         JOIN users ON users.id = files.user_id
         WHERE users.id = %s
@@ -81,30 +83,69 @@ def show_audio_under_user(user_id):
 # DELETE SOUND FILE
 ##############
 
+
+@app.route('/file/<file_id>', methods=['DELETE'])
+def delete_user_file(file_id):
+    # GET user id from the session
+    user = session['user']
+    query = """
+        DELETE FROM files 
+        WHERE files.id = %s 
+        AND files.user_id = %s 
+        RETURNING *
+    """
+    cur = g.db['cursor']
+    cur.execute(query, (file_id, user['id']))
+    g.db['connection'].commit()
+    file = cur.fetchone()
+    print(file)
+    return jsonify(file)
+
 ##############
-# EDIT SOUND FILE DESC
+# EDIT SOUND FILE INFO
 ##############
+
+
+@app.route('/editfile/<file_id>', methods=['PUT'])
+def edit_info(file_id):
+
+    info = request.form['info']
+    user = session['user']
+    query = """
+        UPDATE files
+        SET info = %s 
+        WHERE files.id = %s
+        RETURNING *
+    """
+    g.db['cursor'].execute(
+        query, (info, file_id))
+    g.db['connection'].commit()
+    file = g.db['cursor'].fetchone()
+    print(file)
+    return jsonify(file)
 
 ##############
 # CREATE SOUND FILE
 ##############
 
 
-@app.route('/new-recording/<lang_code>', methods=['POST'])
+@app.route('/new-recording/<lang_code>', methods=['POST', 'PATCH'])
 def create(lang_code):
     print(request.files)
+    info = request.form['info']
     uploaded_file = cloudinary.uploader.upload(
         request.files['audio_file'], resource_type="video")
     print(uploaded_file)
+    lang_name = request.form['language_name']
     user = session['user']
     query = """
         INSERT INTO files
-        (url, info, language_code, user_id)
-        VALUES (%s, %s, %s, %s)
+        (url, info, language_code, language_name, user_id)
+        VALUES (%s, %s, %s, %s, %s)
         RETURNING *
     """
     g.db['cursor'].execute(
-        query, (uploaded_file['url'], 'This is a placeholder description.', lang_code, user['id']))
+        query, (uploaded_file['url'], info, lang_code, lang_name, user['id']))
     g.db['connection'].commit()
     file = g.db['cursor'].fetchone()
     print(file)
